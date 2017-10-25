@@ -33,14 +33,14 @@
     <header class="am-topbar am-topbar-inverse admin-header">
         <div class="am-topbar-brand">
             <a href="" class="tpl-logo">
-                <img src="" style="width:60%;height:60%;" alt="">卡铺
+                <img src="" style="width:60%;height:60%;" alt="">
             </a>
         </div>
 
         <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
 
             <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
-                <!--<li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
+                <li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
                     <a class="am-dropdown-toggle tpl-header-list-link" href="javascript:;">
                         <span class="am-icon-bell-o"></span>House Paid Price</span>
                     </a>
@@ -52,7 +52,61 @@
                             </a>
                         </li>
                     </ul>
-                </li>-->
+                </li>
+
+                <li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
+                    <a class="am-dropdown-toggle tpl-header-list-link" href="javascript:;">
+                        <span class="am-icon-comment-o"></span> House For Sale</span>
+                    </a>
+                    <ul class="am-dropdown-content tpl-dropdown-content">
+                        <li class="tpl-dropdown-list-bdbc">
+                            <a href="" class="tpl-dropdown-list-fl">
+                                <span class="am-icon-btn am-icon-plus tpl-dropdown-ico-btn-size tpl-badge-success"></span>
+                                Sale Search
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+                <li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
+                    <a class="am-dropdown-toggle tpl-header-list-link" href="javascript:;">
+                        <span class="am-icon-comment-o"></span> Analysis Report</span>
+                    </a>
+                    <ul class="am-dropdown-content tpl-dropdown-content">
+                        <li class="tpl-dropdown-list-bdbc">
+                            <a href="" class="tpl-dropdown-list-fl">
+                                <span class="am-icon-btn am-icon-plus tpl-dropdown-ico-btn-size tpl-badge-success"></span>
+                                2017 Spring Report
+                            </a>
+                        </li>
+                        <li class="tpl-dropdown-list-bdbc">
+                            <a href="" class="tpl-dropdown-list-fl">
+                                <span class="am-icon-btn am-icon-plus tpl-dropdown-ico-btn-size tpl-badge-success"></span>
+                                2016 EHS Headline Report
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="am-hide-sm-only"><a href="javascript:;" id="admin-fullscreen"
+                                               class="tpl-header-list-link"><span
+                        class="am-icon-arrows-alt"></span> <span class="admin-fullText">Full Screen</span></a></li>
+
+                <li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
+                    <a class="am-dropdown-toggle tpl-header-list-link" href="javascript:;">
+                        <span class="tpl-header-list-user-nick">{{ session['displayName'] }}</span><span
+                            class="tpl-header-list-user-ico"> <img
+                            src="{{ session['photoURL'] }}"></span>
+                    </a>
+
+                    <ul class="am-dropdown-content">
+                        <li><a href="#"><span class="am-icon-bell-o"></span> Profit</a></li>
+                        <li><a href="#"><span class="am-icon-cog"></span> Setting</a></li>
+                        <li><a href=""><span class="am-icon-power-off"></span> Quit</a>
+                        </li>
+                    </ul>
+                </li>
+                <li><a href="###" class="tpl-header-list-link"><span
+                        class="am-icon-sign-out tpl-header-list-ico-out-size"></span></a></li>
             </ul>
         </div>
     </header>
