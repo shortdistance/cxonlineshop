@@ -1,12 +1,11 @@
 from flask import Blueprint
 from script.models.db import db_session
 
-api = Blueprint('api', __name__)
+main = Blueprint('main', __name__)
 
 from . import route
 
-
-@api.after_request
+@main.after_request
 def after_request(response):
     response.headers.add('Access-Control-Allow-Origin', '*')
     response.headers.add('Access-Control-Allow-Headers', 'Content-Type')
@@ -17,7 +16,7 @@ def after_request(response):
 
 
 """
-@api.after_request
+@main.after_request
 def close_session_after_request(response):
     db_session.remove()
     return response
