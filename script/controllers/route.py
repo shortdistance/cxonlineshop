@@ -2,6 +2,12 @@
 from . import main
 
 
-@main.route('/')
+@main.route('/test')
 def test():
-    return "test"
+    return "test OK!"
+
+
+@main.route('/ping')
+def ping():
+    return "ping OK!"
+
