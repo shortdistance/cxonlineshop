@@ -21,7 +21,7 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///projdb.sqlite'
 MONGODB_URI = 'mongodb://localhost:27017/test'
 
 # record number displayed in single page
-PAGESIZE = 20
+PAGESIZE = 40
 
 ##########################################
 # Task config
