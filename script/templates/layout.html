@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Estate Investor | Real estate investment in UK</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="index">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-siteapp"/>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='assets/i/favicon.png') }}">
+    <link rel="apple-touch-icon-precomposed" href="{{ url_for('static',filename='assets/i/app-icon72x72@2x.png') }}">
+    <meta name="apple-mobile-web-app-title" content="Amaze UI"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/amazeui.min.css') }}"/>
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/admin.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/app.css') }}">
+
+    {% block head %} {% endblock %}
+</head>
+<style>
+    .wrap {
+        height: 100%;
+        width: 100%;
+        background-image: url('/static/assets/img/messi.jpg');
+        #background-repeat: repeat-y;
+    }
+</style>
+{% block style %} {% endblock %}
+<body>
+<div class="wrap">
+    <header class="am-topbar am-topbar-inverse admin-header">
+        <div class="am-topbar-brand">
+            <a href="" class="tpl-logo">
+                <img src="" style="width:60%;height:60%;" alt="">卡铺
+            </a>
+        </div>
+
+        <div class="am-collapse am-topbar-collapse" id="topbar-collapse">
+
+            <ul class="am-nav am-nav-pills am-topbar-nav am-topbar-right admin-header-list tpl-header-list">
+                <!--<li class="am-dropdown" data-am-dropdown data-am-dropdown-toggle>
+                    <a class="am-dropdown-toggle tpl-header-list-link" href="javascript:;">
+                        <span class="am-icon-bell-o"></span>House Paid Price</span>
+                    </a>
+                    <ul class="am-dropdown-content tpl-dropdown-content">
+                        <li class="tpl-dropdown-list-bdbc">
+                            <a href="" class="tpl-dropdown-list-fl">
+                                <span class="am-icon-btn am-icon-plus tpl-dropdown-ico-btn-size tpl-badge-success"></span>
+                                House Paid Price Search
+                            </a>
+                        </li>
+                    </ul>
+                </li>-->
+            </ul>
+        </div>
+    </header>
+
+    {% block body %} {% endblock %}
+
+</div>
+<script src="{{ url_for('static',filename='assets/js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static',filename='assets/js/amazeui.min.js') }}"></script>
+<script src="{{ url_for('static',filename='assets/js/iscroll.js') }}"></script>
+<script src="{{ url_for('static',filename='assets/js/app.js') }}"></script>
+{% block jscript %} {% endblock %}
+</body>
+</html>

@@ -21,3 +21,4 @@ gevent
 gunicorn
 requests
 celery
+Pillow==4.3.0

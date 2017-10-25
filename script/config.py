@@ -18,7 +18,7 @@ SQLALCHEMY_DATABASE_URI = 'sqlite:///projdb.sqlite'
 
 # mongodb connection string
 MONGODB_URI = 'mongodb://heroku_58kf4fqc:m1j3udgpd72eoab5radq1g2bho@ds231205.mlab.com:31205/heroku_58kf4fqc'
-#MONGODB_URI = 'mongodb://localhost:27017/test'
+# MONGODB_URI = 'mongodb://localhost:27017/test'
 
 # record number displayed in single page
 PAGESIZE = 40
@@ -30,7 +30,7 @@ PAGESIZE = 40
 # rabbit mq url
 RABBITMQ_URL = 'amqp://NZ97ia81:-mYjIbOC34zOavnNXl1ndZd2Nb8rtoVa@happy-threar-806.bigwig.lshift.net:10264/286AM56zKV0R'
 
-PING_URL = 'https://wavemonitor.herokuapp.com/ping'
+PING_URL = 'https://cxonlineshop1.herokuapp.com/ping'
 
 ##########################################
 # Email config
