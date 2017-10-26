@@ -8,7 +8,11 @@ def index():
     return render_template("details.html")
 
 
+@main.route('/config')
+def config():
+    return render_template("config.html")
+
+
 @main.route('/ping')
 def ping():
     return "ping OK!"
-
