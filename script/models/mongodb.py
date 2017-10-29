@@ -41,10 +41,14 @@ class Ids:
         return product_id
 
 
+    def get_new_image_id(self):
+        image_id = self.collection.find_and_modify(update={"$inc": {"image_id": 1}}, new=True).get("image_id")
+        return image_id
+
 """
 {
     id:
-    description:
+    category:
     type:  #0: parent 1: children
     parent_id: #parent id, if type 0, then parent_id is 0
 }
@@ -60,6 +64,7 @@ class Category:
         id = Ids().get_new_category_id()
         data['id'] = id
         self.collection.insert_one(data)
+        data.__delitem__('_id')
         return data
 
     def get(self):
@@ -74,16 +79,17 @@ class Category:
         cursor = self.collection.find({"type": 0})
         ret_list = []
         for doc in cursor:
-            ret_list.append(doc['description'])
+            doc.__delitem__('_id')
+            ret_list.append(doc)
         return ret_list
 
     def get_all_sub_category_from_parent(self, category_id):
         cursor = self.collection.find({"parent_id": category_id})
         ret_list = []
         for doc in cursor:
-            ret_list.append(doc['description'])
+            doc.__delitem__('_id')
+            ret_list.append(doc)
         return ret_list
-
 
     def search(self, query_json):
         cursor = self.collection.find(query_json)
@@ -91,6 +97,7 @@ class Category:
         for doc in cursor:
             doc.__delitem__('_id')
             ret_list.append(doc)
+        return ret_list
 
     def delete(self, query_json):
         self.collection.remove(query_json)
@@ -108,14 +115,14 @@ class Category:
     "price":
     "description":
     "icon_pictures":
-    "introduction_pictures":
+    "intro_pictures":
     "category":
     "sub_category":
 }
 """
 
 
-class products:
+class Product:
     def __init__(self):
         self.db = connectDB()
         self.collection = self.db['products']
@@ -124,6 +131,54 @@ class products:
         id = Ids().get_new_product_id()
         data['id'] = id
         self.collection.insert_one(data)
+        data.__delitem__('_id')
+        return data
+
+    def get(self):
+        cursor = self.collection.find()
+        ret_list = []
+        for doc in cursor:
+            doc.__delitem__('_id')
+            ret_list.append(doc)
+        return ret_list
+
+    def get_and_sort(self, qry_list):
+        cursor = self.collection.find().sort(qry_list)
+        ret_list = []
+        for doc in cursor:
+            doc.__delitem__('_id')
+            ret_list.append(doc)
+        return ret_list
+
+
+    def search(self, query_json):
+        cursor = self.collection.find(query_json)
+        ret_list = []
+        for doc in cursor:
+            doc.__delitem__('_id')
+            ret_list.append(doc)
+        return ret_list
+
+    def delete(self, query_json):
+        self.collection.remove(query_json)
+
+    def update(self, query_json, set_json):
+        self.collection.update(
+            query_json,
+            {"$set": set_json}
+        )
+
+
+class ImageOpr:
+    def __init__(self):
+        self.db = connectDB()
+        self.collection = self.db['image']
+
+    def insert(self, data):
+        id = Ids().get_new_image_id()
+        data['id'] = id
+        self.collection.insert_one(data)
+        data.__delitem__('_id')
         return data
 
     def get(self):
@@ -140,6 +195,7 @@ class products:
         for doc in cursor:
             doc.__delitem__('_id')
             ret_list.append(doc)
+        return ret_list
 
     def delete(self, query_json):
         self.collection.remove(query_json)
@@ -149,11 +205,3 @@ class products:
             query_json,
             {"$set": set_json}
         )
-
-
-class image:
-    def __init__(self):
-        self.db = connectDB()
-        self.products_collection = self.db['image']
-
-    pass

@@ -2,9 +2,11 @@
 from flask import Flask
 from flask_mail import Mail
 from script.config import SECRET_KEY, DEBUG
+from flask_dropzone import Dropzone
+
 
 mail = Mail()
-
+dropzone = Dropzone()
 
 def create_app():
     app = Flask(__name__)
@@ -19,6 +21,7 @@ def create_app():
     app.wsgi_app = HTTPMethodOverrideMiddleware(app.wsgi_app)
     # init app by mail
     mail.init_app(app)
+    dropzone.init_app(app)
 
     from script.api import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/api')

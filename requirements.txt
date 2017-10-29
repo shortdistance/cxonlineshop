@@ -22,3 +22,4 @@ gunicorn
 requests
 celery
 Pillow==4.3.0
+flask-dropzone==1.4

@@ -47,3 +47,6 @@ EMAIL_SENDER = 'zhanglei520vip@163.com'
 
 # the password of default sender
 SENDER_PASS = '1qaz2wsx'
+
+#dropzone setting
+DROPZONE_UPLOAD_MULTIPLE = True

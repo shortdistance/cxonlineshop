@@ -9,14 +9,6 @@ $(function () {
         $fullText.text($.AMUI.fullscreen.isFullscreen ? '退出全屏' : '开启全屏');
     });
 
-
-    var dataType = $('body').attr('data-type');
-    for (key in pageData) {
-        if (key == dataType) {
-            pageData[key]();
-        }
-    }
-
     $('.tpl-switch').find('.tpl-switch-btn-view').on('click', function () {
         $(this).prev('.tpl-switch-btn').prop("checked", function () {
             if ($(this).is(':checked')) {
@@ -50,332 +42,245 @@ $('.tpl-header-nav-hover-ico').on('click', function () {
 })
 
 
-// 页面数据
-var pageData = {
-    // ===============================================
-    // 首页
-    // ===============================================
-    'index': function indexData() {
+// ==========================
+// Category Setting
+// ==========================
 
+$(function () {
+    $('#doc-prompt-toggle').on('click', function () {
+        $('#my-prompt').modal({
+            relatedTarget: this,
+            onConfirm: function (e) {
+                axios.post('/api/addNewCategory', {
+                    "category": e.data,
+                    "type": 0,
+                    "parent_id": 0
+                }).then(function (response) {
+                    alert("创建成功!");
 
-        var myScroll = new IScroll('#wrapper', {
-            scrollbars: true,
-            mouseWheel: true,
-            interactiveScrollbars: true,
-            shrinkScrollbars: 'scale',
-            preventDefault: false,
-            fadeScrollbars: true
+                    var select = document.getElementById('setting_category_list');
+                    var opt = document.createElement('option');
+                    opt.value = response.data.data.id;
+                    opt.innerHTML = response.data.data.category;
+                    select.appendChild(opt);
+
+                    $('#setting_category_input').val('');
+
+                }).catch(function (error) {
+                    console.log(error);
+                });
+            },
+            onCancel: function (e) {
+                console.log(e.data);
+                $('#setting_category_input').val('');
+            }
         });
-
-        var myScrollA = new IScroll('#wrapperA', {
-            scrollbars: true,
-            mouseWheel: true,
-            interactiveScrollbars: true,
-            shrinkScrollbars: 'scale',
-            preventDefault: false,
-            fadeScrollbars: true
-        });
-
-        var myScrollB = new IScroll('#wrapperB', {
-            scrollbars: true,
-            mouseWheel: true,
-            interactiveScrollbars: true,
-            shrinkScrollbars: 'scale',
-            preventDefault: false,
-            fadeScrollbars: true
-        });
+    });
 
 
-        // document.addEventListener('touchmove', function(e) { e.preventDefault(); }, false);
+    $('#doc-prompt-toggle1').on('click', function () {
+        var myselect = document.getElementById("setting_category_list");
+        var index = myselect.selectedIndex;
 
-        // ==========================
-        // 百度图表A http://echarts.baidu.com/
-        // ==========================
+        if (index != -1) {
+            var category_id = myselect.options[index].value;
+            var category = myselect.options[index].text;
+            $('#setting_model_prompt_category_id_input').val(category_id);
+            $('#setting_model_prompt_category_name_input').val(category);
+            $('#setting_model_prompt_sub_category_input').val('');
 
-        var echartsA = echarts.init(document.getElementById('tpl-echarts-A'));
-        option = {
+            $('#my-prompt1').modal({
+                relatedTarget: this,
+                onConfirm: function (e) {
+                    alert(e.data)
+                    if (e.data && e.data.length == 3) {
+                        axios.post('/api/addNewCategory', {
+                            "category": e.data[2],
+                            "type": 1,
+                            "parent_id": parseInt(e.data[0])
+                        }).then(function (response) {
+                            var content = $('#setting_category_table tbody').html();
+                            content += "<tr><td>" + response.data.data.id + "</td>";
+                            content += "<td><a href=\"#\">" + e.data[1] + "</a></td>";
+                            content += "<td class=\"am-hide-sm-only\"><a href=\"/config/product/display/"+ response.data.data.type +"_"+ response.data.data.id +"\">" + response.data.data.category + "</a></td>";
+                            content += "<td><div class=\"am-btn-toolbar\"><div class=\"am-btn-group am-btn-group-xs\">";
+                            content += "<button class=\"am-btn am-btn-default am-btn-xs am-text-secondary\"><span class=\"am-icon-pencil-square-o\"></span> 编辑</button>";
+                            content += "<button class=\"am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only\" onclick=\"deleteSubcategoryById(" + response.data.data.id + ")\"><span class=\"am-icon-trash-o\"></span> 删除</button>";
+                            content += "</div></div></td></tr>";
+                            $('#setting_category_table tbody').html(content);
 
-            tooltip: {
-                trigger: 'axis',
-            },
-            legend: {
-                data: ['邮件', '媒体', '资源']
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis: [{
-                type: 'category',
-                boundaryGap: true,
-                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-            }],
+                            $('#setting_model_prompt_category_id_input').val('');
+                            $('#setting_model_prompt_category_name_input').val('');
+                            $('#setting_model_prompt_sub_category_input').val('');
 
-            yAxis: [{
-                type: 'value'
-            }],
-            series: [{
-                name: '邮件',
-                type: 'line',
-                stack: '总量',
-                areaStyle: {normal: {}},
-                data: [120, 132, 101, 134, 90, 230, 210],
-                itemStyle: {
-                    normal: {
-                        color: '#59aea2'
-                    },
-                    emphasis: {}
-                }
-            },
-                {
-                    name: '媒体',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: {normal: {}},
-                    data: [220, 182, 191, 234, 290, 330, 310],
-                    itemStyle: {
-                        normal: {
-                            color: '#e7505a'
-                        }
+                        }).catch(function (error) {
+                            console.log(error);
+                            $('#setting_model_prompt_category_id_input').val('');
+                            $('#setting_model_prompt_category_name_input').val('');
+                            $('#setting_model_prompt_sub_category_input').val('');
+                        });
                     }
                 },
-                {
-                    name: '资源',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: {normal: {}},
-                    data: [150, 232, 201, 154, 190, 330, 410],
-                    itemStyle: {
-                        normal: {
-                            color: '#32c5d2'
-                        }
-                    }
+                onCancel: function (e) {
+                    console.log(e.data);
                 }
-            ]
-        };
-        echartsA.setOption(option);
-    },
-    // ===============================================
-    // 图表页
-    // ===============================================
-    'chart': function chartData() {
-        // ==========================
-        // 百度图表A http://echarts.baidu.com/
-        // ==========================
-
-        var echartsC = echarts.init(document.getElementById('tpl-echarts-C'));
+            });
+        }
+    });
 
 
-        optionC = {
-            tooltip: {
-                trigger: 'axis'
-            },
-            toolbox: {
-                top: '0',
-                feature: {
-                    dataView: {show: true, readOnly: false},
-                    magicType: {show: true, type: ['line', 'bar']},
-                    restore: {show: true},
-                    saveAsImage: {show: true}
-                }
-            },
-            legend: {
-                data: ['蒸发量', '降水量', '平均温度']
-            },
-            xAxis: [{
-                type: 'category',
-                data: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月']
-            }],
-            yAxis: [{
-                type: 'value',
-                name: '水量',
-                min: 0,
-                max: 250,
-                interval: 50,
-                axisLabel: {
-                    formatter: '{value} ml'
-                }
-            },
-                {
-                    type: 'value',
-                    name: '温度',
-                    min: 0,
-                    max: 25,
-                    interval: 5,
-                    axisLabel: {
-                        formatter: '{value} °C'
-                    }
-                }
-            ],
-            series: [{
-                name: '蒸发量',
-                type: 'bar',
-                data: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 135.6, 162.2, 32.6, 20.0, 6.4, 3.3]
-            },
-                {
-                    name: '降水量',
-                    type: 'bar',
-                    data: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
-                },
-                {
-                    name: '平均温度',
-                    type: 'line',
-                    yAxisIndex: 1,
-                    data: [2.0, 2.2, 3.3, 4.5, 6.3, 10.2, 20.3, 23.4, 23.0, 16.5, 12.0, 6.2]
-                }
-            ]
-        };
+    $("#setting_category_delete").on('click', function () {
+        var myselect = document.getElementById("setting_category_list");
+        var index = myselect.selectedIndex;
 
-        echartsC.setOption(optionC);
+        if (index != -1) {
+            var category_id = myselect.options[index].value;
+            console.log(category_id);
+            axios.post('/api/deleteCategoryAndSubCategoryById', {
+                "id": parseInt(category_id)
+            }).then(function (response) {
+                console.log(response);
+                console.log("删除成功!");
+                window.location.href = "/config";
 
-        var echartsB = echarts.init(document.getElementById('tpl-echarts-B'));
-        optionB = {
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                x: 'center',
-                data: ['某软件', '某主食手机', '某水果手机', '降水量', '蒸发量']
-            },
-            radar: [{
-                indicator: [
-                    {text: '品牌', max: 100},
-                    {text: '内容', max: 100},
-                    {text: '可用性', max: 100},
-                    {text: '功能', max: 100}
-                ],
-                center: ['25%', '40%'],
-                radius: 80
-            },
-                {
-                    indicator: [
-                        {text: '外观', max: 100},
-                        {text: '拍照', max: 100},
-                        {text: '系统', max: 100},
-                        {text: '性能', max: 100},
-                        {text: '屏幕', max: 100}
-                    ],
-                    radius: 80,
-                    center: ['50%', '60%'],
-                },
-                {
-                    indicator: (function () {
-                        var res = [];
-                        for (var i = 1; i <= 12; i++) {
-                            res.push({text: i + '月', max: 100});
-                        }
-                        return res;
-                    })(),
-                    center: ['75%', '40%'],
-                    radius: 80
-                }
-            ],
-            series: [{
-                type: 'radar',
-                tooltip: {
-                    trigger: 'item'
-                },
-                itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                data: [{
-                    value: [60, 73, 85, 40],
-                    name: '某软件'
-                }]
-            },
-                {
-                    type: 'radar',
-                    radarIndex: 1,
-                    data: [{
-                        value: [85, 90, 90, 95, 95],
-                        name: '某主食手机'
-                    },
-                        {
-                            value: [95, 80, 95, 90, 93],
-                            name: '某水果手机'
-                        }
-                    ]
-                },
-                {
-                    type: 'radar',
-                    radarIndex: 2,
-                    itemStyle: {normal: {areaStyle: {type: 'default'}}},
-                    data: [{
-                        name: '降水量',
-                        value: [2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 75.6, 82.2, 48.7, 18.8, 6.0, 2.3],
-                    },
-                        {
-                            name: '蒸发量',
-                            value: [2.0, 4.9, 7.0, 23.2, 25.6, 76.7, 35.6, 62.2, 32.6, 20.0, 6.4, 3.3]
-                        }
-                    ]
-                }
-            ]
-        };
-        echartsB.setOption(optionB);
-        var echartsA = echarts.init(document.getElementById('tpl-echarts-A'));
-        option = {
+            }).catch(function (error) {
+                console.log(error);
+            });
+        }
+    });
+});
 
-            tooltip: {
-                trigger: 'axis',
-            },
-            legend: {
-                data: ['邮件', '媒体', '资源']
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis: [{
-                type: 'category',
-                boundaryGap: true,
-                data: ['周一', '周二', '周三', '周四', '周五', '周六', '周日']
-            }],
 
-            yAxis: [{
-                type: 'value'
-            }],
-            series: [{
-                name: '邮件',
-                type: 'line',
-                stack: '总量',
-                areaStyle: {normal: {}},
-                data: [120, 132, 101, 134, 90, 230, 210],
-                itemStyle: {
-                    normal: {
-                        color: '#59aea2'
-                    },
-                    emphasis: {}
-                }
-            },
-                {
-                    name: '媒体',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: {normal: {}},
-                    data: [220, 182, 191, 234, 290, 330, 310],
-                    itemStyle: {
-                        normal: {
-                            color: '#e7505a'
-                        }
-                    }
-                },
-                {
-                    name: '资源',
-                    type: 'line',
-                    stack: '总量',
-                    areaStyle: {normal: {}},
-                    data: [150, 232, 201, 154, 190, 330, 410],
-                    itemStyle: {
-                        normal: {
-                            color: '#32c5d2'
-                        }
-                    }
-                }
-            ]
-        };
-        echartsA.setOption(option);
-    }
+function refreshCategoryList() {
+    axios.get('/api/getRootCategory').then(function (response) {
+        var select = document.getElementById('setting_category_list');
+        for (var i = 0; i < response.data.data.length; i++) {
+            var opt = document.createElement('option');
+            opt.value = response.data.data[i].id;
+            opt.innerHTML = response.data.data[i].category;
+            select.appendChild(opt);
+        }
+
+    }).catch(function (error) {
+        console.log(error);
+    });
 }
+
+function refreshSubCategoryTable(){
+    var value = $('#setting_category_list').val();
+    var text = $("select#setting_category_list option:selected").text();
+
+    axios.get('/api/getSubCategoryById/' + value).then(function (response) {
+        var len = $("tbody").children().length;
+        if (len > 0) {
+            $("tbody").children().remove();
+        }
+
+        var content = "";
+        for (var j = 0; j < response.data.data.length; j++) {
+
+            content += "<tr><td>" + response.data.data[j].id + "</td>";
+            content += "<td><a href=\"#\">" + text + "</a></td>";
+            content += "<td class=\"am-hide-sm-only\"><a href=\"/config/product/display/"+ response.data.data[j].type + "_" + response.data.data[j].id +"\">" + response.data.data[j].category + "</a></td>";
+            content += "<td><div class=\"am-btn-toolbar\"><div class=\"am-btn-group am-btn-group-xs\">";
+            content += "<button class=\"am-btn am-btn-default am-btn-xs am-text-secondary\"><span class=\"am-icon-pencil-square-o\"></span> 编辑</button>";
+            content += "<button class=\"am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only\" onclick=\"deleteSubcategoryById(" + response.data.data[j].id + ")\"><span class=\"am-icon-trash-o\"></span> 删除</button>";
+            content += "</div></div></td></tr>";
+
+        }
+        $('#setting_category_table tbody').html(content);
+
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
+
+$('#setting_category_list').change(function () {
+    var value = $(this).val();
+    var text = $("select#setting_category_list option:selected").text();
+
+    axios.get('/api/getSubCategoryById/' + value).then(function (response) {
+        var len = $("tbody").children().length;
+        if (len > 0) {
+            $("tbody").children().remove();
+        }
+
+        var content = "";
+        for (var j = 0; j < response.data.data.length; j++) {
+
+            content += "<tr><td>" + response.data.data[j].id + "</td>";
+            content += "<td><a href=\"#\">" + text + "</a></td>";
+            content += "<td class=\"am-hide-sm-only\"><a href=\"/config/product/display/"+ response.data.data[j].type + "_" + response.data.data[j].id +"\">" + response.data.data[j].category + "</a></td>";
+            content += "<td><div class=\"am-btn-toolbar\"><div class=\"am-btn-group am-btn-group-xs\">";
+            content += "<button class=\"am-btn am-btn-default am-btn-xs am-text-secondary\"><span class=\"am-icon-pencil-square-o\"></span> 编辑</button>";
+            content += "<button class=\"am-btn am-btn-default am-btn-xs am-text-danger am-hide-sm-only\" onclick=\"deleteSubcategoryById(" + response.data.data[j].id + ")\"><span class=\"am-icon-trash-o\"></span> 删除</button>";
+            content += "</div></div></td></tr>";
+
+        }
+        $('#setting_category_table tbody').html(content);
+
+    }).catch(function (error) {
+        console.log(error);
+    });
+});
+
+
+function deleteSubcategoryById(id) {
+    axios.post('/api/deleteSubCategoryById', {
+        "id": parseInt(id)
+    }).then(function (response) {
+        console.log("删除成功!");
+        window.location.href = "/config";
+
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
+
+$('#a_category').on('click', function () {
+    window.location.href = "/config";
+});
+
+$('#a_products').on('click', function () {
+    window.location.href = "/config/products";
+});
+
+
+// ==========================
+// Products Setting
+// ==========================
+function LoadProductCategoryList() {
+    axios.get('/api/getRootCategory').then(function (response) {
+        console.log(response.data);
+        var select = document.getElementById('product_category');
+        for (var i = 0; i < response.data.data.length; i++) {
+            var opt = document.createElement('option');
+            opt.value = response.data.data[i].id;
+            opt.innerHTML = response.data.data[i].category;
+            select.appendChild(opt);
+        }
+
+    }).catch(function (error) {
+        console.log(error);
+    });
+}
+
+
+$('#product_category').change(function () {
+    var value = $(this).val();
+    var text = $("select#product_category option:selected").text();
+
+    axios.get('/api/getSubCategoryById/' + value).then(function (response) {
+        $('#product_sub_category').html('');
+        var select = document.getElementById('product_sub_category');
+        for (var i = 0; i < response.data.data.length; i++) {
+            var opt = document.createElement('option');
+            opt.value = response.data.data[i].id;
+            opt.innerHTML = response.data.data[i].category;
+            select.appendChild(opt);
+        }
+
+    }).catch(function (error) {
+        console.log(error);
+    });
+});

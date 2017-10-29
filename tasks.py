@@ -28,7 +28,6 @@ def task_a():
     msg = {'msg': ''}
     try:
         # task script is here
-
         msg['msg'] = 'OK'
     except Exception as e:
         msg['msg'] = e

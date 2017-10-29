@@ -1,0 +1,110 @@
+{% extends 'layout.html' %}
+{% block head %}
+{% endblock %}
+{% block style %}
+    <style xmlns="http://www.w3.org/1999/html">
+        div {
+            /*border: 1px solid red;*/
+        }
+
+        #map {
+            float: left;
+            height: 400px;
+            width: 100%;
+        }
+
+        .map-icon-text {
+            speak: none;
+            color: #FFFFFF;
+            font-style: normal;
+            font-weight: normal;
+            font-variant: normal;
+            text-transform: none;
+            line-height: 48px;
+
+            /* Better Font Rendering =========== */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .price_font {
+            color: #ff4949;
+
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+
+    <div class="tpl-page-container tpl-page-header-fixed">
+        <div class="tpl-left-nav tpl-left-nav-hover">
+            <div class="tpl-left-nav-title">
+                分类
+            </div>
+            <div class="tpl-left-nav-list">
+                <ul class="tpl-left-nav-menu">
+                    {% if rootCategoryList|length > 0 %}
+                        {% for rc in rootCategoryList %}
+                            <li class="tpl-left-nav-item">
+                                <a href="javascript:;" class="nav-link tpl-left-nav-link-list">
+                                    <i class="am-icon-location-arrow"></i><span>{{ rc['category'] }}</span>
+                                    <i class="tpl-left-nav-content tpl-badge-danger">{{ rc['sub_category']|length }}</i>
+                                    <i class="am-icon-angle-right tpl-left-nav-more-ico am-fr am-margin-right"></i>
+                                </a>
+                                {% if rc['sub_category']|length >0 %}
+                                    {% for sc in rc['sub_category'] %}
+                                        <ul class="tpl-left-nav-sub-menu" style="display: none;">
+                                            <li><a href="/product/display/{{ sc['type'] }}_{{ sc['id'] }}">
+                                                <i class="am-icon-angle-right"></i><span><b>{{ sc['category'] }}</b></span>
+                                                <i class="tpl-left-nav-content-ico am-fr am-margin-right"></i>
+                                            </a></li>
+                                        </ul>
+                                    {% endfor %}
+                                {% endif %}
+                            </li>
+                        {% endfor %}
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+
+
+        <div class="tpl-content-wrapper" id="property-list-content">
+            <div class="tpl-portlet-components">
+                <div class="portlet-title">
+                    <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">产品</strong> /
+                        <small>显示</small>
+                    </div>
+                </div>
+                <div class="tpl-block">
+                    <div class="am-g">
+                        {% if product_list|length >0 %}
+                            {% for product in product_list %}
+                                <div class="gallery-title">{{ product.title }}</div>
+                                <div class="gallery-desc">{{ product. description }}</div>
+                                <div class="gallery-price">{{ product.price }}</div>
+
+                                {% for icon_img in product.icon_pictures %}
+                                    <img class="am-img-thumbnail am-img-bdrs"
+                                         src="/img/{{ icon_img }}" alt="">
+                                {% endfor %}
+
+                                {% for intro_img in product.intro_pictures %}
+                                    <img class="am-img-thumbnail am-img-bdrs"
+                                         src="/img/{{ intro_img }}" alt="">
+                                {% endfor %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="tpl-alert"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block jscript %}
+    <script>
+
+
+    </script>
+{% endblock %}
